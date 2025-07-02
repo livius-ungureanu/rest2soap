@@ -1,6 +1,6 @@
 package com.controller;
 
-import at.tmobile.ms.rlm.dto.Country;
+import at.lun.ms.country.dto.Country;
 import com.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

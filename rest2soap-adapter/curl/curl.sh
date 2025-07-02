@@ -11,4 +11,4 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-curl -X GET "http://localhost:8081/countries/$1" -H "Accept: application/json"
+curl -v -X GET "http://localhost:8081/countries/$1" -H "Accept: application/json"

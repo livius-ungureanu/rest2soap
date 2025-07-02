@@ -1,6 +1,6 @@
 package com.service;
 
-import at.tmobile.ms.rlm.dto.Country;
+import at.lun.ms.country.dto.Country;
 import com.example.consumingwebservice.CountrySoapClient;
 import com.example.consumingwebservice.wsdl.GetCountryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,6 @@ public class CountryService {
                 response.getCountry().getName(),
                 response.getCountry().getPopulation(),
                 response.getCountry().getCapital(),
-                at.tmobile.ms.rlm.dto.Currency.valueOf(response.getCountry().getCurrency().name()));
+                at.lun.ms.country.dto.Currency.valueOf(response.getCountry().getCurrency().name()));
     }
 }

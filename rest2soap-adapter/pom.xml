@@ -123,9 +123,9 @@
 							<inputSpec>${project.basedir}/src/main/resources/countries.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<output>${project.build.directory}/generated-sources/openapi</output>
-							<modelPackage>at.tmobile.ms.rlm.dto</modelPackage>
-							<apiPackage>at.tmobile.ms.rlm.api</apiPackage>
-							<invokerPackage>at.tmobile.ms.rlm.api</invokerPackage>
+							<modelPackage>at.lun.ms.country.dto</modelPackage>
+							<apiPackage>at.lun.ms.country.api</apiPackage>
+							<invokerPackage>at.lun.ms.country.api</invokerPackage>
 							<supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
 							<configOptions>
 								<delegatePattern>true</delegatePattern>
