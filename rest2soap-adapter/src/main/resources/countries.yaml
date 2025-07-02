@@ -1,0 +1,50 @@
+openapi: 3.0.3
+info:
+  title: Countries API
+  description: RESTful version of the SOAP `getCountry` operation
+  version: "1.0.0"
+
+paths:
+  /countries/{name}:
+    get:
+      summary: Get country information
+      operationId: getCountry
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Name of the country
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response with country data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Country'
+        '404':
+          description: Country not found
+
+components:
+  schemas:
+    Country:
+      type: object
+      properties:
+        name:
+          type: string
+        population:
+          type: integer
+        capital:
+          type: string
+        currency:
+          $ref: '#/components/schemas/Currency'
+      required: [name, population, capital, currency]
+
+    Currency:
+      type: string
+      enum:
+        - USD
+        - EUR
+        - RON
+        - PLN
