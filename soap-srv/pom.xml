@@ -10,12 +10,16 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>countries-web-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>countries-web-service</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>17</java.version>
+		<docker-image-tag>${project.version}</docker-image-tag>
+		<countries-service-docker-image-name>soap-countries-web-service</countries-service-docker-image-name>
+		<docker-image-registry>localhost</docker-image-registry>
+		<server-port>8080</server-port>
 	</properties>
 
 	<dependencies>
@@ -43,10 +47,12 @@
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
 			<!-- begin::xsd -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -69,5 +75,124 @@
 			<!-- end::xsd -->
 		</plugins>
 	</build>
+
+
+	<profiles>
+
+		<profile>
+			<id>prepare-docker</id>
+			<activation>
+				<file>
+					<exists>src/main/docker</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>prepare-docker-folder</id>
+								<phase>package</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>target/docker</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/docker</directory>
+											<filtering>true</filtering>
+										</resource>
+										<resource>
+											<directory>${project.build.directory}</directory>
+											<include>${project.build.finalName}.jar</include>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>package-docker-folder</id>
+								<phase>package</phase>
+								<configuration>
+									<target>
+										<zip basedir="${project.build.directory}/docker"
+											 destfile="${project.build.directory}/${project.build.finalName}-docker.zip"/>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>docker</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+
+						<configuration>
+							<dockerDirectory>${project.build.directory}/docker</dockerDirectory>
+							<imageName>
+								${docker-image-registry}/${countries-service-docker-image-name}
+							</imageName>
+							<imageTags>
+								<imageTag>${docker-image-tag}</imageTag>
+							</imageTags>
+							<rm>true</rm>
+							<forceTags>true</forceTags>
+						</configuration>
+						<executions>
+							<execution>
+								<id>remove-image</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>removeImage</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>build-image</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>push-image</id>
+								<phase>deploy</phase>
+								<goals>
+									<goal>push</goal>
+								</goals>
+								<configuration>
+									<serverId>${docker-image-registry}</serverId>
+									<registryUrl>${docker-image-registry}</registryUrl>
+									<imageName>
+										${docker-image-registry}/${countries-service-docker-image-name}:${docker-image-tag}
+									</imageName>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
