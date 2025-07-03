@@ -1,4 +1,5 @@
 # Build
+`mvn clean install`
 
 # Build image
 `mvn clean package -Pdocker -DskipTests`
