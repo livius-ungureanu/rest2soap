@@ -1,4 +1,5 @@
-# Goal: demo a rest2soap adapter where a openapi rest json target layer is translated based on a wsdl layer
+# Goal: 
+demo a rest2soap adapter where a openapi rest json target layer is translated based on a wsdl layer
 
 
 ---
